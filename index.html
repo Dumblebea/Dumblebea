@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathLand - Vương quốc Toán học</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6ff;color:#26345b}
+header{background:linear-gradient(120deg,#6558e8,#39b9d5);color:white;padding:25px 7%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px}
+.logo{font-size:27px;font-weight:900}
+header p{margin:6px 0 0}
+.score{background:white;color:#554bd0;padding:12px 18px;border-radius:20px;font-weight:bold}
+nav{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;background:white;padding:14px;box-shadow:0 3px 12px #0000000c}
+nav button,.btn{border:0;border-radius:12px;padding:12px 19px;background:#eeeefe;color:#5147bf;font-weight:bold;cursor:pointer}
+nav button.active,nav button:hover,.btn.primary{background:#6658e8;color:white}
+main{max-width:1100px;margin:28px auto;padding:0 18px}
+.hero{background:linear-gradient(120deg,#fff1c9,#ffe2ed);border-radius:25px;padding:30px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.hero h1{font-size:32px;margin:0 0 10px;color:#4b438e}
+.hero p{line-height:1.6}
+.hero .emoji{font-size:90px}
+.panel{background:white;padding:25px;border-radius:20px;margin-top:22px;box-shadow:0 5px 20px #343c6810}
+h2{color:#5147bf;margin-top:0}
+h3{margin-top:0}
+select,input{padding:12px;border:1px solid #ddd;border-radius:10px;font-size:15px;max-width:100%}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:#f7f6ff;padding:20px;border-radius:17px;border:1px solid #eeecff}
+.card .emoji{font-size:36px}
+.card p{line-height:1.5;color:#65708b}
+.lesson{display:none}
+.lesson.active{display:block}
+.question{font-size:24px;font-weight:bold;margin:22px 0}
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.answer{padding:15px;border:2px solid #e4e2ff;border-radius:12px;background:white;cursor:pointer;font-size:18px}
+.answer:hover{background:#f1efff;border-color:#7568ec}
+.answer:disabled{cursor:default;opacity:.8}
+.feedback{font-weight:bold;margin-top:15px;min-height:25px}
+footer{text-align:center;padding:30px;color:#78809a}
+.hidden{display:none}
+@media(max-width:600px){.hero h1{font-size:25px}.answers{grid-template-columns:1fr}header{padding:22px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">🌈 MathLand</div>
+    <p>Vương quốc Toán học vui nhộn!</p>
+  </div>
+  <div class="score">⭐ Điểm của em: <span id="points">0</span></div>
+</header>
+
+<nav>
+  <button class="active" onclick="showPage('home',this)">🏠 Trang chủ</button>
+  <button onclick="showPage('lessons',this)">📚 Bài học</button>
+  <button onclick="showPage('practice',this)">✏️ Luyện tập</button>
+  <button onclick="showPage('game',this)">🎮 Trò chơi</button>
+</nav>
+
+<main>
+<section id="home" class="page">
+  <div class="hero">
+    <div>
+      <h1>Chào mừng đến với MathLand!</h1>
+      <p>Học Toán thật vui, khám phá kiến thức mới và chinh phục những thử thách thú vị.</p>
+      <label for="grade">Chọn lớp của em: </label>
+      <select id="grade" onchange="changeGrade()">
+        <option value="1">Lớp 1</option>
+        <option value="2">Lớp 2</option>
+        <option value="3">Lớp 3</option>
+        <option value="4">Lớp 4</option>
+        <option value="5">Lớp 5</option>
+      </select>
+      <p id="welcome">Sẵn sàng khám phá thế giới Toán học chưa?</p>
+      <button class="btn primary" onclick="showPage('lessons')">Bắt đầu học →</button>
+    </div>
+    <div class="emoji">🧮</div>
+  </div>
+
+  <div class="panel">
+    <h2>✨ Khám phá MathLand</h2>
+    <div class="grid">
+      <div class="card"><div class="emoji">📖</div><h3>Bài học sinh động</h3><p>Khám phá các phép tính và kiến thức Toán học.</p></div>
+      <div class="card"><div class="emoji">✏️</div><h3>Luyện tập mỗi ngày</h3><p>Trả lời câu hỏi và kiểm tra kiến thức.</p></div>
+      <div class="card"><div class="emoji">🏆</div><h3>Nhận điểm thưởng</h3><p>Tích lũy điểm khi trả lời đúng câu hỏi.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="lessons" class="page hidden">
+  <div class="panel">
+    <h2>📚 Góc bài học</h2>
+    <p>Chọn một chủ đề để bắt đầu khám phá.</p>
+    <div class="grid">
+      <div class="card"><div class="emoji">➕</div><h3>Phép cộng</h3><p>Cộng các số tự nhiên và tìm tổng.</p><button class="btn primary" onclick="lesson('add')">Học ngay</button></div>
+      <div class="card"><div class="emoji">➖</div><h3>Phép trừ</h3><p>Tìm hiệu và luyện tập phép trừ.</p><button class="btn primary" onclick="lesson('sub')">Học ngay</button></div>
+      <div class="card"><div class="emoji">✖️</div><h3>Phép nhân</h3><p>Làm quen với phép nhân và bảng cửu chương.</p><button class="btn primary" onclick="lesson('mul')">Học ngay</button></div>
+      <div class="card"><div class="emoji">➗</div><h3>Phép chia</h3><p>Khám phá phép chia và cách tìm thương.</p><button class="btn primary" onclick="lesson('div')">Học ngay</button></div>
+      <div class="card"><div class="emoji">🍕</div><h3>Phân số cơ bản</h3><p>Làm quen với tử số và mẫu số.</p><button class="btn primary" onclick="lesson('frac')">Học ngay</button></div>
+    </div>
+  </div>
+  <div class="panel hidden" id="lessonContent">
+    <h2 id="lessonTitle"></h2>
+    <div id="lessonText"></div>
+    <button class="btn primary" onclick="showPage('practice')">Luyện tập ngay →</button>
+  </div>
+</section>
+
+<section id="practice" class="page hidden">
+  <div class="panel">
+    <h2>✏️ Thử thách Toán học</h2>
+    <p>Chọn chủ đề rồi trả lời câu hỏi nhé!</p>
+    <select id="topic" onchange="newQuestion()">
+      <option value="add">Phép cộng</option>
+      <option value="sub">Phép trừ</option>
+      <option value="mul">Phép nhân</option>
+      <option value="div">Phép chia</option>
+    </select>
+    <div class="question" id="question">5 + 3 = ?</div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="btn primary" onclick="newQuestion()">Câu tiếp theo ↗</button>
+  </div>
+</section>
+
+<section id="game" class="page hidden">
+  <div class="panel">
+    <h2>🎮 Trò chơi: Nhà Toán học nhí</h2>
+    <p>Giúp nhân vật MathLand giải quyết các tình huống thực tế!</p>
+    <div class="card">
+      <div class="emoji">🛒</div>
+      <h3 id="gameQuestion">Em có 10 chiếc kẹo, được tặng thêm 5 chiếc. Em có tất cả bao nhiêu chiếc?</h3>
+      <input id="gameAnswer" type="number" placeholder="Nhập đáp án">
+      <button class="btn primary" onclick="checkGame()">Kiểm tra</button>
+      <div class="feedback" id="gameFeedback"></div>
+      <button class="btn" onclick="nextGame()">Thử thách khác</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>🌈 MathLand © 2026 | Học Toán vui mỗi ngày!</footer>
+
+<script>
+let points = Number(localStorage.getItem("mathlandPoints") || 0);
+document.getElementById("points").textContent = points;
+
+function addPoints(n){
+  points += n;
+  localStorage.setItem("mathlandPoints", points);
+  document.getElementById("points").textContent = points;
+}
+
+function showPage(id,button){
+  document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  if(button) button.classList.add("active");
+  else {
+    const buttons=[...document.querySelectorAll("nav button")];
+    const index={home:0,lessons:1,practice:2,game:3}[id];
+    buttons[index].classList.add("active");
+  }
+}
+
+function changeGrade(){
+  const grade=document.getElementById("grade").value;
+  document.getElementById("welcome").textContent=
+    "MathLand đã sẵn sàng đồng hành cùng học sinh lớp "+grade+"!";
+}
+
+const lessons={
+ add:["➕ Phép cộng","Phép cộng dùng để gộp các nhóm đồ vật lại với nhau. Ví dụ: 3 quả táo + 2 quả táo = 5 quả táo. Ta viết: 3 + 2 = 5."],
+ sub:["➖ Phép trừ","Phép trừ giúp chúng ta biết còn lại bao nhiêu. Ví dụ: Có 8 chiếc kẹo, ăn 3 chiếc thì còn 8 - 3 = 5 chiếc."],
+ mul:["✖️ Phép nhân","Phép nhân là cách viết gọn của phép cộng các số giống nhau. Ví dụ: 3 × 4 = 4 + 4 + 4 = 12."],
+ div:["➗ Phép chia","Phép chia giúp chia đều một số đồ vật thành các phần bằng nhau. Ví dụ: 12 : 3 = 4."],
+ frac:["🍕 Phân số cơ bản","Phân số biểu diễn một phần của tổng thể. Ví dụ: 1/2 nghĩa là một trong hai phần bằng nhau."]
+};
+
+function lesson(type){
+  document.getElementById("lessonContent").classList.remove("hidden");
+  document.getElementById("lessonTitle").textContent=lessons[type][0];
+  document.getElementById("lessonText").innerHTML="<p style='font-size:18px;line-height:1.8'>"+lessons[type][1]+"</p>";
+  document.getElementById("lessonContent").scrollIntoView({behavior:"smooth"});
+}
+
+let correctAnswer=8;
+function newQuestion(){
+  const type=document.getElementById("topic").value;
+  let a,b,operator;
+  if(type==="add"){a=random(1,20);b=random(1,20);correctAnswer=a+b;operator="+";}
+  if(type==="sub"){a=random(5,30);b=random(1,a);correctAnswer=a-b;operator="−";}
+  if(type==="mul"){a=random(2,10);b=random(2,10);correctAnswer=a*b;operator="×";}
+  if(type==="div"){b=random(2,10);correctAnswer=random(2,10);a=b*correctAnswer;operator="÷";}
+  document.getElementById("question").textContent=a+" "+operator+" "+b+" = ?";
+  document.getElementById("feedback").textContent="";
+  const options=new Set([correctAnswer]);
+  while(options.size<4){
+    options.add(Math.max(0,correctAnswer+random(-10,10)));
+  }
+  const shuffled=[...options].sort(()=>Math.random()-.5);
+  document.getElementById("answers").innerHTML="";
+  shuffled.forEach(value=>{
+    const button=document.createElement("button");
+    button.className="answer";
+    button.textContent=value;
+    button.onclick=()=>checkAnswer(value);
+    document.getElementById("answers").appendChild(button);
+  });
+}
+function random(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function checkAnswer(value){
+  const feedback=document.getElementById("feedback");
+  if(value===correctAnswer){
+    feedback.textContent="🎉 Chính xác! Em nhận được 10 điểm!";
+    feedback.style.color="green";
+    addPoints(10);
+  }else{
+    feedback.textContent="💡 Chưa chính xác. Hãy thử câu tiếp theo nhé!";
+    feedback.style.color="#d56b42";
+  }
+  document.querySelectorAll("#answers button").forEach(b=>b.disabled=true);
+}
+newQuestion();
+
+const games=[
+ {q:"Em có 10 chiếc kẹo, được tặng thêm 5 chiếc. Em có tất cả bao nhiêu chiếc?",a:15},
+ {q:"Có 20 quyển sách, chia đều cho 4 bạn. Mỗi bạn được bao nhiêu quyển?",a:5},
+ {q:"Một cửa hàng có 6 hộp bút, mỗi hộp có 3 chiếc. Có tất cả bao nhiêu chiếc bút?",a:18},
+ {q:"Lan có 30 nghìn đồng, mua một quyển vở giá 12 nghìn đồng. Lan còn lại bao nhiêu nghìn đồng?",a:18},
+ {q:"Có 24 quả cam chia đều vào 6 giỏ. Mỗi giỏ có bao nhiêu quả cam?",a:4}
+];
+let gameIndex=0;
+function checkGame(){
+  const answer=document.getElementById("gameAnswer").value;
+  const feedback=document.getElementById("gameFeedback");
+  if(answer===""){feedback.textContent="Em hãy nhập đáp án nhé!";return;}
+  if(Number(answer)===games[gameIndex].a){
+    feedback.textContent="🌟 Tuyệt vời! Em nhận được 15 điểm!";
+    feedback.style.color="green";
+    addPoints(15);
+  }else{
+    feedback.textContent="💪 Chưa đúng rồi, hãy thử lại nhé!";
+    feedback.style.color="#d56b42";
+  }
+}
+function nextGame(){
+  gameIndex=(gameIndex+1)%games.length;
+  document.getElementById("gameQuestion").textContent=games[gameIndex].q;
+  document.getElementById("gameAnswer").value="";
+  document.getElementById("gameFeedback").textContent="";
+}
+</script>
+</body>
+</html>
